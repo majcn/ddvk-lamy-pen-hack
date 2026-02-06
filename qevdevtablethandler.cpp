@@ -80,7 +80,7 @@ void QEvdevTabletData::processInputEvent(input_event *ev)
         auto qEvent = ev->value != 0 ? QEvent::KeyPress : QEvent::KeyRelease;
         switch (ev->code) {
         case BTN_TOOL_RUBBER:
-            QWindowSystemInterface::handleKeyEvent(0, qEvent, Qt::Key_I, Qt::ControlModifier);
+            QWindowSystemInterface::handleKeyEvent(0, qEvent, Qt::Key_T, Qt::ControlModifier);
             break;
         case BTN_STYLUS:
             QWindowSystemInterface::handleKeyEvent(0, qEvent, Qt::Key_U, Qt::ControlModifier);
