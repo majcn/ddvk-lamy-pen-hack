@@ -16,17 +16,26 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Fix git ownership
+      run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
     - name: Install dependencies
       run: |
         apt-get update
-        apt-get install -y zip curl build-essential qt6-base-dev qt6-tools-dev qt6-declarative-dev qt6-base-private-dev libts-dev
+        apt-get install -y gh zip curl build-essential qt6-base-dev qt6-tools-dev qt6-declarative-dev qt6-base-private-dev libts-dev
 
     - name: Build plugin
       run: . /opt/codex/rm2/*/environment-setup-cortexa7hf-neon-remarkable-linux-gnueabi && qmake && make
 
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: libqevdevlamyplugin
-        path: |
-          *.so
+    - name: Delete old release
+      continue-on-error: true
+      run: |
+        gh release delete latest --yes --cleanup-tag
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create release
+      run: |
+        gh release create latest *.so --title "Latest Build" --notes "Automated build from commit ${{ github.sha }}"
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
