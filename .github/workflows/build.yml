@@ -21,17 +21,6 @@ jobs:
         apt-get update
         apt-get install -y zip curl build-essential qt6-base-dev qt6-tools-dev qt6-declarative-dev qt6-base-private-dev libts-dev
 
-    - name: Install Rust
-      run: |
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install
-        sh install -y
-        rm install
-        . "$HOME/.cargo/env"
-        rustup target add armv7-unknown-linux-gnueabihf
-
-    - name: Clone xovi
-      run: git clone https://github.com/asivery/xovi /tmp/xovi
-
     - name: Build plugin
       run: . /opt/codex/rm2/*/environment-setup-cortexa7hf-neon-remarkable-linux-gnueabi && qmake && make
 
@@ -41,4 +30,3 @@ jobs:
         name: libqevdevlamyplugin
         path: |
           *.so
-          *.a
